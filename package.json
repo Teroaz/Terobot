@@ -1,17 +1,22 @@
 {
   "dependencies": {
+    "@discordjs/builders": "^0.15.0",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "path": "^0.12.7"
   },
   "name": "terobot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "teroaz",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
 }

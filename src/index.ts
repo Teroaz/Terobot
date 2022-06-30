@@ -1,5 +1,5 @@
-import * as dotenv from "dotenv"
+import * as dotenv from 'dotenv';
 
-export {}
+dotenv.config();
 
-dotenv.config()
+export {default as Client} from './CustomClient';
