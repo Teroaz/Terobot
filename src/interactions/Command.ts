@@ -1,10 +1,4 @@
-import {
-	ApplicationCommandData,
-	ApplicationCommandOption,
-	Collection,
-	CommandInteraction,
-	GuildMember
-} from 'discord.js';
+import {ApplicationCommandData, Collection, CommandInteraction, GuildMember} from 'discord.js';
 import CustomClient from '../CustomClient';
 
 export type CommandInfo = {
@@ -30,6 +24,11 @@ export default abstract class Command {
 		if (this.client.isStaff(member) || !this.info.cooldown || !this.cooldowns.has(member.id)) return false;
 
 		return Date.now() <= this.cooldowns.get(member.id)!;
+	}
+	
+	deleteCooldown = (member: GuildMember) => {
+		if (!this.cooldowns.has(member.id)) return;
+		this.cooldowns.delete(member.id);
 	}
 
 	abstract onExecute(interaction: CommandInteraction): void;
