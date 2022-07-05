@@ -26,4 +26,6 @@ export namespace TimeUtils {
 
 		return `${res}${seconds < 10 ? '0' : ''}${seconds}s`;
 	};
+
+	export const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 }
