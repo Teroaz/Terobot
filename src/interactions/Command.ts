@@ -1,11 +1,23 @@
-import {ApplicationCommandData, Collection, CommandInteraction, GuildMember} from 'discord.js';
+import {
+	ApplicationCommandData, AutocompleteFocusedOption,
+	AutocompleteInteraction,
+	ChatInputApplicationCommandData,
+	Collection,
+	CommandInteraction,
+	GuildMember
+} from 'discord.js';
 import CustomClient from '../CustomClient';
 
 export type CommandInfo = {
 		cooldown?: number,
 		staff?: boolean
 	}
-	& ApplicationCommandData;
+	& ChatInputApplicationCommandData;
+
+export type AutoCompleteOption = {
+	name: string,
+	value: string
+};
 
 export default abstract class Command {
 
@@ -25,11 +37,16 @@ export default abstract class Command {
 
 		return Date.now() <= this.cooldowns.get(member.id)!;
 	}
-	
+
 	deleteCooldown = (member: GuildMember) => {
 		if (!this.cooldowns.has(member.id)) return;
 		this.cooldowns.delete(member.id);
 	}
 
 	abstract onExecute(interaction: CommandInteraction): void;
+
+	onAutocomplete = (option: AutocompleteFocusedOption): Array<AutoCompleteOption> => {
+		return [];
+	}
+
 }

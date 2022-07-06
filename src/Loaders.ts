@@ -23,9 +23,13 @@ export namespace Loaders {
 			client.commands.set(command.info.name, command);
 		});
 
-		client.baseGuild.commands.set(client.commands.map(c => c.info)).then(r => {
-			console.info(`${r.size} command${r.size > 1 ? 's' : ''} registered as slash commands.`);
-		});
+		if (client.commands.size > 0) {
+			client.baseGuild?.commands.set(client.commands.map(c => c.info)).then(r => {
+				console.info(`${r.size} command${r.size > 1 ? 's' : ''} registered as slash commands.`);
+			}).catch(e => {
+				console.error(`Failed to register commands as slash commands.`, e);
+			});
+		}
 	};
 
 	export const loadStaff = (client: CustomClient) => {
@@ -50,6 +54,14 @@ export namespace Loaders {
 		const eventsFiles = glob.sync(path.join(__dirname, `events/**/*.js`));
 		console.info(`Found ${eventsFiles.length} event${eventsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 
+		eventsFiles.forEach(file => {
+			const event = require(file);
+			const eventName = file.split('.')[0];
+
+			client.on(eventName, event.bind(null, client));
+			console.info(`Loaded event ${eventName} ✅`);
+			delete require.cache[require.resolve(file)];
+		});
 	};
 
 }
