@@ -1,25 +1,26 @@
 import {Client, Collection, Guild, GuildMember, Intents, Permissions, Snowflake} from 'discord.js';
 import * as path from 'path';
 import Command from './interactions/Command';
+import {Loaders} from './Loaders';
 
 export type TableDataID = Record<string, Snowflake>;
 
 export default abstract class CustomClient extends Client {
-	
-	readonly chansID: TableDataID = require(path.join(__dirname, 'datas/chansID.json'));
-	readonly rolesID: TableDataID = require(path.join(__dirname, 'datas/rolesID.json'));
-	
+
+	readonly chansID: TableDataID = require(path.join(process.cwd(), 'datas/chansID.json'));
+	readonly rolesID: TableDataID = require(path.join(process.cwd(), 'datas/rolesID.json'));
+
 	staff: Record<'rolesID' | 'usersID', Array<Snowflake>> = {
 		rolesID: [],
 		usersID: []
 	};
-	
+
 	readonly commands: Collection<string, Command> = new Collection();
-	
+
 	get baseGuild(): Guild | null {
 		return this.guilds.cache.get(process.env.BASE_GUILD_ID!) || null;
 	}
-	
+
 	protected constructor() {
 		super({
 			intents: [
@@ -43,18 +44,24 @@ export default abstract class CustomClient extends Client {
 			allowedMentions: {parse: ['roles', 'users', 'everyone'], repliedUser: false},
 			partials: ['MESSAGE', 'GUILD_SCHEDULED_EVENT', 'GUILD_MEMBER', 'CHANNEL', 'REACTION', 'USER']
 		});
-		
+
 		this.login(process.env.TOKEN).then(() => {
+			Loaders.loadCommands(this);
+			Loaders.loadEvents(this);
+			Loaders.loadStaff(this);
 			this.onLogin();
+		}).catch(e => {
+			console.error(`Cannot instantiate CustomClient ${e}`);
+			process.exit(1);
 		});
 	}
-	
+
 	isStaff = (member: GuildMember) => member.permissions.has(Permissions.FLAGS.BAN_MEMBERS) && member.roles.cache.some(r => this.staff.rolesID.includes(r.id)) || this.staff.usersID.includes(member.id);
-	
+
 	addStaff = (type: 'rolesID' | 'usersID', id: Snowflake) => {
 		if (this.staff[type].includes(id)) return;
 		this.staff[type].push(id);
 	}
-	
-	abstract onLogin();
+
+	protected abstract onLogin();
 }
