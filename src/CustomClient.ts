@@ -1,15 +1,9 @@
 import {Client, Collection, Guild, GuildMember, Intents, Permissions, Snowflake} from 'discord.js';
-import * as path from 'path';
 import Command from './interactions/Command';
 import {Loaders} from './Loaders';
 
-export type TableDataID = Record<string, Snowflake>;
-
 export default abstract class CustomClient extends Client {
-
-	readonly chansID: TableDataID = require(path.join(process.cwd(), 'datas/chansID.json'));
-	readonly rolesID: TableDataID = require(path.join(process.cwd(), 'datas/rolesID.json'));
-
+	
 	staff: Record<'rolesID' | 'usersID', Array<Snowflake>> = {
 		rolesID: [],
 		usersID: []
@@ -51,7 +45,7 @@ export default abstract class CustomClient extends Client {
 			Loaders.loadStaff(this);
 			this.onLogin();
 		}).catch(e => {
-			console.error(`Cannot instantiate CustomClient ${e}`);
+			console.error(`Error while instantiating CustomClient: ${e}`);
 			process.exit(1);
 		});
 	}

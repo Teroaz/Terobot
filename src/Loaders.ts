@@ -9,7 +9,7 @@ export namespace Loaders {
 	export const loadCommands = (client: CustomClient) => {
 		console.info(`Loading commands...`);
 
-		const commandsFiles = glob.sync(path.join(__dirname, `commands/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `commands/**/*.js`)));
+		const commandsFiles = glob.sync(path.join(__dirname, `/**/commands/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/commands/**/*.js`)));
 		console.info(`Found ${commandsFiles.length} command${commandsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 
 		commandsFiles.forEach(file => {
@@ -35,23 +35,27 @@ export namespace Loaders {
 	export const loadStaff = (client: CustomClient) => {
 		console.info(`Loading staff...`);
 
-		const staffFiles = require(path.join(process.cwd(), 'datas/staff.json')) as { [key in 'rolesID' | 'usersID']: Array<Snowflake> };
-		console.info(`Found ${Object.keys(staffFiles).length} staff role${Object.keys(staffFiles).length > 1 ? 's' : ''} in the corresponding file.`);
-
-		Object.entries(staffFiles).forEach(([key, value]) => {
-			if (!['rolesID', 'usersID'].includes(key)) {
-				console.error(`Staff file has an invalid key: ${key}`);
-				return;
-			}
-			console.log(`Loaded ${value.length} ${key} ✅ : ${value.join(', ')}`);
-			client.staff[key] = [...new Set([...client.staff[key], ...value])];
-		});
+		try {
+			const staffFiles = require(path.join(process.cwd(), 'datas/staff.json')) as { [key in 'rolesID' | 'usersID']: Array<Snowflake> };
+			console.info(`Found ${Object.keys(staffFiles).length} staff role${Object.keys(staffFiles).length > 1 ? 's' : ''} in the corresponding file.`);
+			
+			Object.entries(staffFiles).forEach(([key, value]) => {
+				if (!['rolesID', 'usersID'].includes(key)) {
+					console.error(`Staff file has an invalid key: ${key}`);
+					return;
+				}
+				console.log(`Loaded ${value.length} ${key} ✅ : ${value.join(', ')}`);
+				client.staff[key] = [...new Set([...client.staff[key], ...value])];
+			});
+		} catch (e) {
+			console.error(`Failed to load staff.`, e);
+		}
 	};
 
 	export const loadEvents = (client: CustomClient) => {
 		console.info(`Loading events...`);
 
-		const eventsFiles = glob.sync(path.join(__dirname, `events/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `events/**/*.js`)));
+		const eventsFiles = glob.sync(path.join(__dirname, `/**/events/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/events/**/*.js`)));
 		console.info(`Found ${eventsFiles.length} event${eventsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 
 		eventsFiles.forEach(file => {

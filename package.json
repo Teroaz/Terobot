@@ -16,7 +16,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepublish": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jestconfig.json",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "keywords": [],
   "author": "teroaz",
@@ -24,6 +25,10 @@
   "description": "",
   "devDependencies": {
     "@types/glob": "^7.2.0",
+    "@types/jest": "^28.1.4",
+    "jest": "^28.1.2",
+    "ts-jest": "^28.0.5",
+    "tslint": "^6.1.3",
     "typescript": "^4.7.4"
   }
 }

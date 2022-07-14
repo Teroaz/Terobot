@@ -43,7 +43,7 @@ export default abstract class Command {
 		this.cooldowns.delete(member.id);
 	}
 
-	abstract onExecute(interaction: CommandInteraction): void;
+	abstract onExecute(interaction: CommandInteraction);
 
 	onAutocomplete = (option: AutocompleteFocusedOption): Array<AutoCompleteOption> => {
 		return [];
