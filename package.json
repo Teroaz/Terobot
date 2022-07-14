@@ -7,7 +7,7 @@
     "path": "^0.12.7"
   },
   "name": "terobot",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -19,7 +19,11 @@
     "test": "jest --config jestconfig.json",
     "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Teroaz/Terobot.git"
+  },
+  "keywords": ["discord.js", "wrapper", "template", "bot"],
   "author": "teroaz",
   "license": "ISC",
   "description": "",
