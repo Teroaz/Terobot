@@ -9,7 +9,7 @@ export namespace Loaders {
 	export const loadCommands = (client: CustomClient) => {
 		console.info(`Loading commands...`);
 
-		const commandsFiles = glob.sync(path.join(__dirname, `/**/commands/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/commands/**/*.js`)));
+		const commandsFiles = glob.sync(path.join(__dirname, `/**/commands/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/commands/**/*.js`), {ignore: `**/node_modules/**`}));
 		console.info(`Found ${commandsFiles.length} command${commandsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 
 		commandsFiles.forEach(file => {
@@ -55,13 +55,18 @@ export namespace Loaders {
 	export const loadEvents = (client: CustomClient) => {
 		console.info(`Loading events...`);
 
-		const eventsFiles = glob.sync(path.join(__dirname, `/**/events/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/events/**/*.js`)));
+		const eventsFiles = glob.sync(path.join(__dirname, `/**/events/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/events/**/*.js`), {ignore: `**/node_modules/**`}));
 		console.info(`Found ${eventsFiles.length} event${eventsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 
 		eventsFiles.forEach(file => {
 			const event = require(file);
-			const eventName = file.split('.')[0];
+			const eventName = file.split('/')?.at(-1)?.split('.')?.[0];
 
+			if (!eventName) {
+				console.error(`Event ${file} has no name.`);
+				return;
+			}
+			
 			client.on(eventName, event.bind(null, client));
 			console.info(`Loaded event ${eventName} ✅`);
 			delete require.cache[require.resolve(file)];

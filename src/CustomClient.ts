@@ -2,7 +2,7 @@ import {Client, Collection, Guild, GuildMember, Intents, Permissions, Snowflake}
 import Command from './interactions/Command';
 import {Loaders} from './Loaders';
 
-export default abstract class CustomClient extends Client {
+export default class CustomClient extends Client {
 	
 	staff: Record<'rolesID' | 'usersID', Array<Snowflake>> = {
 		rolesID: [],
@@ -12,10 +12,15 @@ export default abstract class CustomClient extends Client {
 	readonly commands: Collection<string, Command> = new Collection();
 
 	get baseGuild(): Guild | null {
-		return this.guilds.cache.get(process.env.BASE_GUILD_ID!) || null;
+		if (!process.env.BASE_GUILD_ID) {
+			console.error('No base guild ID specified in environment file.');
+			process.exit(1);
+		}
+		
+		return this.guilds.cache.get(process.env.BASE_GUILD_ID) ?? null;
 	}
 
-	protected constructor() {
+	constructor() {
 		super({
 			intents: [
 				Intents.FLAGS.GUILDS,
@@ -43,7 +48,7 @@ export default abstract class CustomClient extends Client {
 			Loaders.loadCommands(this);
 			Loaders.loadEvents(this);
 			Loaders.loadStaff(this);
-			this.onLogin();
+			console.info(`Logged in as ${this.user?.tag ?? 'Unknown#XXXX'}.`);
 		}).catch(e => {
 			console.error(`Error while instantiating CustomClient: ${e}`);
 			process.exit(1);
@@ -56,6 +61,4 @@ export default abstract class CustomClient extends Client {
 		if (this.staff[type].includes(id)) return;
 		this.staff[type].push(id);
 	}
-
-	protected abstract onLogin();
 }
