@@ -7,7 +7,7 @@
     "path": "^0.12.7"
   },
   "name": "terobot",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -23,7 +23,12 @@
     "type": "git",
     "url": "git+https://github.com/Teroaz/Terobot.git"
   },
-  "keywords": ["discord.js", "wrapper", "template", "bot"],
+  "keywords": [
+    "discord.js",
+    "wrapper",
+    "template",
+    "bot"
+  ],
   "author": "teroaz",
   "license": "ISC",
   "description": "",
