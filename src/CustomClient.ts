@@ -55,7 +55,7 @@ export default class CustomClient extends Client {
 		});
 	}
 
-	isStaff = (member: GuildMember) => member.permissions.has(Permissions.FLAGS.BAN_MEMBERS) && member.roles.cache.some(r => this.staff.rolesID.includes(r.id)) || this.staff.usersID.includes(member.id);
+	isStaff = (member: GuildMember) => [Permissions.FLAGS.BAN_MEMBERS, Permissions.FLAGS.ADMINISTRATOR].some(f => member.permissions.has(f)) || member.roles.cache.some(r => this.staff.rolesID.includes(r.id)) || this.staff.usersID.includes(member.id);
 
 	addStaff = (type: 'rolesID' | 'usersID', id: Snowflake) => {
 		if (this.staff[type].includes(id)) return;
