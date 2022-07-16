@@ -45,7 +45,12 @@ export = async (client: CustomClient, interaction: Interaction) => {
 				color: ColorUtils.values.ERROR,
 				description: `❗ • ${e.message}`
 			});
-			interaction.reply({embeds: [embed], ephemeral: true});
+			
+			if (interaction.deferred) {
+				interaction.editReply({embeds: [embed]});
+			} else {
+				interaction.reply({embeds: [embed], ephemeral: true});
+			}
 			command.deleteCooldown(member);
 		}
 	} else if (interaction.isAutocomplete()) {
