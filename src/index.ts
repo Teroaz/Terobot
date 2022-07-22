@@ -8,6 +8,7 @@ export * from './utils';
 export {default as CustomClient} from './CustomClient';
 
 export {Loaders} from './Loaders';
+export * from 'discord.js';
 
 const envFiles = fs.readdirSync(process.cwd()).filter(file => file.startsWith('.env') && !file.includes('example'));
 
