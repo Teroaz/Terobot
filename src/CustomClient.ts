@@ -1,4 +1,4 @@
-import {Client, Collection, Guild, GuildMember, Intents, Permissions, Snowflake} from 'discord.js';
+import {Client, Collection, GatewayIntentBits, Guild, GuildMember, Partials, PermissionsBitField, Snowflake} from 'discord.js';
 import Command from './interactions/Command';
 import {Loaders} from './Loaders';
 
@@ -23,25 +23,26 @@ export default class CustomClient extends Client {
 	constructor() {
 		super({
 			intents: [
-				Intents.FLAGS.GUILDS,
-				Intents.FLAGS.GUILD_MEMBERS,
-				Intents.FLAGS.GUILD_BANS,
-				Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-				Intents.FLAGS.GUILD_INTEGRATIONS,
-				Intents.FLAGS.GUILD_WEBHOOKS,
-				Intents.FLAGS.GUILD_INVITES,
-				Intents.FLAGS.GUILD_VOICE_STATES,
-				Intents.FLAGS.GUILD_PRESENCES,
-				Intents.FLAGS.GUILD_MESSAGES,
-				Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-				Intents.FLAGS.GUILD_MESSAGE_TYPING,
-				Intents.FLAGS.DIRECT_MESSAGES,
-				Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-				Intents.FLAGS.DIRECT_MESSAGE_TYPING,
-				Intents.FLAGS.GUILD_SCHEDULED_EVENTS
+				GatewayIntentBits.DirectMessageReactions,
+				GatewayIntentBits.DirectMessages,
+				GatewayIntentBits.DirectMessageTyping,
+				GatewayIntentBits.GuildBans,
+				GatewayIntentBits.GuildIntegrations,
+				GatewayIntentBits.GuildInvites,
+				GatewayIntentBits.GuildMembers,
+				GatewayIntentBits.GuildEmojisAndStickers,
+				GatewayIntentBits.GuildMessageReactions,
+				GatewayIntentBits.GuildPresences,
+				GatewayIntentBits.MessageContent,
+				GatewayIntentBits.GuildVoiceStates,
+				GatewayIntentBits.Guilds,
+				GatewayIntentBits.GuildWebhooks,
+				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.GuildMessageTyping,
+				GatewayIntentBits.GuildScheduledEvents
 			],
 			allowedMentions: {parse: ['roles', 'users', 'everyone'], repliedUser: false},
-			partials: ['MESSAGE', 'GUILD_SCHEDULED_EVENT', 'GUILD_MEMBER', 'CHANNEL', 'REACTION', 'USER']
+			partials: [Partials.Channel, Partials.Reaction, Partials.Message, Partials.GuildMember, Partials.GuildScheduledEvent, Partials.ThreadMember, Partials.User]
 		});
 
 		this.login(process.env.TOKEN).then(() => {
@@ -55,7 +56,7 @@ export default class CustomClient extends Client {
 		});
 	}
 
-	isStaff = (member: GuildMember) => [Permissions.FLAGS.BAN_MEMBERS, Permissions.FLAGS.ADMINISTRATOR].some(f => member.permissions.has(f)) || member.roles.cache.some(r => this.staff.rolesID.includes(r.id)) || this.staff.usersID.includes(member.id);
+	isStaff = (member: GuildMember) => [PermissionsBitField.Flags.BanMembers, PermissionsBitField.Flags.Administrator].some(f => member.permissions.has(f)) || member.roles.cache.some(r => this.staff.rolesID.includes(r.id)) || this.staff.usersID.includes(member.id);
 
 	addStaff = (type: 'rolesID' | 'usersID', id: Snowflake) => {
 		if (this.staff[type].includes(id)) return;

@@ -1,9 +1,9 @@
 export namespace ColorUtils {
 
 	export const enum values {
-		BASE = '#3f95ad',
-		WHITE = '#e6e6e6',
-		ERROR = '#FF3431'
+		BASE = 0x3f95ad,
+		WHITE = 0xe6e6e6,
+		ERROR = 0xFF3431
 	}
 
 	export const uint8ToHex = (uint: Uint8ClampedArrayConstructor): string => {

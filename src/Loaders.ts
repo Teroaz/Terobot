@@ -9,7 +9,7 @@ export namespace Loaders {
 	export const loadCommands = (client: CustomClient) => {
 		console.info(`Loading commands...`);
 		
-		const commandsFiles = glob.sync(path.join(__dirname, `/**/commands/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/commands/**/*.js`), {ignore: `**/node_modules/**`}));
+		const commandsFiles = glob.sync(path.join(__dirname, `**`, 'commands', '**', '*.js')).concat(glob.sync(path.join(process.cwd(), '**', 'commands', '**', '*.js'), {ignore: path.join('**', 'node_modules', '**')}));
 		console.info(`Found ${commandsFiles.length} command${commandsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 		
 		commandsFiles.forEach(file => {
@@ -35,7 +35,7 @@ export namespace Loaders {
 	export const loadStaff = (client: CustomClient) => {
 		console.info(`Loading staff...`);
 		
-		const staffFiles = glob.sync(path.join(process.cwd(), `/**/staffs.json`), {ignore: `**/node_modules/**`});
+		const staffFiles = glob.sync(path.join(process.cwd(), '**', 'staffs.json'), {ignore: path.join('**', 'node_modules', '**')});
 		const staffFile = staffFiles[0];
 		
 		if (!staffFile) {
@@ -65,12 +65,12 @@ export namespace Loaders {
 	export const loadEvents = (client: CustomClient) => {
 		console.info(`Loading events...`);
 		
-		const eventsFiles = glob.sync(path.join(__dirname, `/**/events/**/*.js`)).concat(glob.sync(path.join(process.cwd(), `/**/events/**/*.js`), {ignore: `**/node_modules/**`}));
+		const eventsFiles = glob.sync(path.join(__dirname, '**', 'events', '**', '*.js')).concat(glob.sync(path.join(process.cwd(), '**', 'events', '**', '*.js'), {ignore: path.join('**', 'node_modules', '**')}));
 		console.info(`Found ${eventsFiles.length} event${eventsFiles.length > 1 ? 's' : ''} in the corresponding dir.`);
 		
 		eventsFiles.forEach(file => {
 			const event = require(file);
-			const eventName = file.split('/')?.at(-1)?.split('.')?.[0];
+			const eventName = file.split(path.sep)?.at(-1)?.split('.')?.[0];
 			
 			if (!eventName) {
 				console.error(`Event ${file} has no name.`);

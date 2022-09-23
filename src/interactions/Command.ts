@@ -1,11 +1,4 @@
-import {
-	ApplicationCommandData, AutocompleteFocusedOption,
-	AutocompleteInteraction,
-	ChatInputApplicationCommandData,
-	Collection,
-	CommandInteraction,
-	GuildMember
-} from 'discord.js';
+import {AutocompleteFocusedOption, ChatInputApplicationCommandData, Collection, CommandInteraction, GuildMember} from 'discord.js';
 import CustomClient from '../CustomClient';
 
 export type CommandInfo = {

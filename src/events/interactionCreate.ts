@@ -1,5 +1,5 @@
 import CustomClient from '../CustomClient';
-import {GuildMember, Interaction, MessageEmbed} from 'discord.js';
+import {EmbedBuilder, GuildMember, Interaction} from 'discord.js';
 import {ColorUtils, TimeUtils} from '../utils';
 import msToFormattedString = TimeUtils.msToFormattedString;
 
@@ -16,7 +16,7 @@ export = async (client: CustomClient, interaction: Interaction) => {
 		const member = interaction.member as GuildMember;
 
 		if (command.info.staff && !client.isStaff(member)) {
-			const embed = new MessageEmbed({
+			const embed = new EmbedBuilder({
 				color: ColorUtils.values.ERROR,
 				description: `⛔ • Tu n'as pas la permission d'exécuter cette commande !`
 			});
@@ -26,7 +26,7 @@ export = async (client: CustomClient, interaction: Interaction) => {
 
 		if (command.hasCooldown(member)) {
 			const remainingTime = command.cooldowns.get(member.id)! - Date.now();
-			const embed = new MessageEmbed({
+			const embed = new EmbedBuilder({
 				color: ColorUtils.values.ERROR,
 				description: `⌛ • Tu dois attendre ${msToFormattedString(remainingTime)} pour exécuter la commande \`${commandName}\``
 			});
@@ -41,7 +41,7 @@ export = async (client: CustomClient, interaction: Interaction) => {
 		try {
 			await command.onExecute(interaction);
 		} catch (e) {
-			const embed = new MessageEmbed({
+			const embed = new EmbedBuilder({
 				color: ColorUtils.values.ERROR,
 				description: `❗ • ${e.message}`
 			});
