@@ -37,7 +37,9 @@ export = async (client: CustomClient, interaction: Interaction) => {
 		if (command.info.cooldown) {
 			command.cooldowns.set(member.id, Date.now() + command.info.cooldown * 1000);
 		}
-
+		
+		if (!interaction.isChatInputCommand()) return;
+		
 		try {
 			await command.onExecute(interaction);
 		} catch (e) {
